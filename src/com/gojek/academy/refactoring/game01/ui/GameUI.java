@@ -1,6 +1,6 @@
 package com.gojek.academy.refactoring.game01.ui;
 
-import com.gojek.academy.refactoring.game01.game.Game;
+import com.gojek.academy.refactoring.game01.game.game;
 import com.gojek.academy.refactoring.game01.game.Sizer;
 import com.gojek.academy.refactoring.game01.ui.event.GameEvent;
 import com.gojek.academy.refactoring.game01.ui.event.GameLoseHandler;
@@ -9,46 +9,54 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.util.Optional;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
 
     private int totalRow;
     private int totalColumn;
-    private Game game;
+    private int timeCount;
+
+    private com.gojek.academy.refactoring.game01.game.game game;
     private CardButton[][] buttonBoard;
     private String currentCard;
     private CardButton prevCardButton;
     private int totalCard;
     private Label lblTotalCard;
+    private Label lblTimer;
 
-    public GameUI(int totalRow, int totalColumn){
+
+    public GameUI(int totalRow, int totalColumn, int timeCount0){
+        this.timeCount = timeCount0;
 
         this.totalRow = totalRow;
         this.totalColumn = totalColumn;
 
-        this.game = new Game(totalRow, totalColumn);
-        this.totalCard = game.getTotalCard();
+        this.game = new game(totalRow, totalColumn);
+        this.totalCard = game.getTotal_card();
 
         this.buttonBoard = new CardButton[totalRow][totalColumn];
 
-        // TODO: a lazy class
+        // TODO: 5. a lazy class
         Sizer sizer = new Sizer();
-
 
         lblTotalCard = new Label();
         lblTotalCard.setText("Open '"+totalCard+"' number more");
 
-
         Button btnGiveUp = new Button();
         btnGiveUp.setText("Give Up");
         btnGiveUp.setOnAction((ActionEvent) -> {
-            // TODO: 1. duplicate code
+            // TODO: 3. duplicate code
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Give Up");
             alert.setHeaderText("Are you sure to give up the game?");
@@ -66,8 +74,9 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
 
         Button btnExit = new Button();
         btnExit.setText("Exit");
+        btnExit.setAlignment(Pos.CENTER_RIGHT);
         btnExit.setOnAction((ActionEvent) ->{
-            // TODO: 1. duplicate code
+            // TODO: 3. duplicate code
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Give Up");
             alert.setHeaderText("Are you sure to give up the game?");
@@ -83,20 +92,44 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
             }
         });
 
+        lblTimer = new Label();
+        lblTimer.setFont(Font.font ("Calibri", 18));
+        lblTimer.setText("Time count: " + timeCount);
+        lblTimer.setPadding(new Insets(15, 12, 0, 12));
+
+        Timer timer = new Timer(true);
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() ->{
+                    System.out.println("111");
+                    timeCount --;
+                    lblTimer.setText("Time count: " + timeCount);
+
+                    if(timeCount <= 0){
+                        timer.cancel();
+                        fireEvent(new GameEvent(GameEvent.GAME_LOSE_TYPE));
+                    }
+                });
+            }
+        }, 0 , 1000);
+
         // info box
-        HBox infoBox = new HBox();
-        infoBox.setPadding(new Insets(15, 12, 15, 12));
-        infoBox.setSpacing(10);
-        infoBox.setPrefHeight(sizer.getInfoBoxHeight());
-        infoBox.getChildren().add(btnGiveUp);
-        infoBox.getChildren().add(btnExit);
+        HBox hbox = new HBox();
+        hbox.setPadding(new Insets(15, 12, 15, 12));
+        hbox.setSpacing(10);
+
+        hbox.getChildren().add(btnGiveUp);
+        hbox.getChildren().add(btnExit);
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(lblTimer);
+        vbox.getChildren().add(hbox);
 
         // grid
         GridPane gamePane = new GridPane();
         gamePane.setVgap(totalRow);
         gamePane.setHgap(totalColumn);
-
-
 
         for(int row = 0; row < totalRow; row++){
             for(int column = 0; column < totalColumn; column++){
@@ -106,14 +139,13 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
                 button.setPrefHeight(sizer.getTileSize());
 
                 gamePane.add(button, column, row);
-
                 buttonBoard[row][column] = button;
             }
         }
 
 
         // set to ui
-        setTop(infoBox);
+        setTop(vbox);
         setCenter(gamePane);
         setBottom(lblTotalCard);
     }
@@ -126,12 +158,8 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
             int row = button.getRow();
             int column = button.getColumn();
 
-
             String cardValue = game.getCard(row, column);
             button.setText(cardValue);
-
-            System.out.println(currentCard + " == " + cardValue);
-
 
             if(currentCard == null){
                 currentCard = cardValue;

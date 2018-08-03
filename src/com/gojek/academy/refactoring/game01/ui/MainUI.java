@@ -24,21 +24,24 @@ public class MainUI extends VBox {
         btnEasy.setFont(Font.font ("Calibri", 24));
         btnEasy.setText("Easy");
         btnEasy.setOnAction((ActionEvent) -> {
-            fireEvent(new StartEvent(2,3));
+            // TODO: 2. magic number
+            fireEvent(new StartEvent(2,3, (int) Math.round(2 * 3 * 1.5) ));
         });
 
         Button btnMedium = new Button();
         btnMedium.setFont(Font.font ("Calibri", 24));
         btnMedium.setText("Medium");
         btnMedium.setOnAction((ActionEvent) -> {
-            fireEvent(new StartEvent(3,4));
+            // TODO: 2. magic number
+            fireEvent(new StartEvent(3,4, (int) Math.round(3 * 4 * 1.5)));
         });
 
         Button btnHard = new Button();
         btnHard.setFont(Font.font ("Calibri", 24));
         btnHard.setText("Hard");
         btnHard.setOnAction((ActionEvent) -> {
-            fireEvent(new StartEvent(4,5));
+            // TODO: 2. magic number
+            fireEvent(new StartEvent(4,5, (int) Math.round(4 * 5 * 1.5)));
         });
 
         HBox ctrlBox = new HBox();
@@ -55,7 +58,7 @@ public class MainUI extends VBox {
         lblTitle.setFont(Font.font ("Times", 42));
         lblTitle.setAlignment(Pos.CENTER);
         lblTitle.setPrefWidth(Double.MAX_VALUE);
-        lblTitle.setText("Memory Game");
+        lblTitle.setText("Memory game");
 
         lblInfo = new Label();
         lblInfo.setPrefWidth(Double.MAX_VALUE);

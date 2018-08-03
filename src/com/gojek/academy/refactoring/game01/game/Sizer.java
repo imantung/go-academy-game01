@@ -1,6 +1,6 @@
 package com.gojek.academy.refactoring.game01.game;
 
-// TODO: 3. a lazy class
+// TODO: 5. a lazy class
 public class Sizer {
 
     public static final int TILE_SIZE = 120;

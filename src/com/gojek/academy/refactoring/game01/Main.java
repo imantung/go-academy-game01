@@ -20,7 +20,6 @@ public class Main extends Application implements StartHandler, GameWinHandler, G
 
     @Override
     public void start(final Stage stage) {
-
         this.stage = stage;
 
         mainUI = new MainUI();
@@ -28,7 +27,7 @@ public class Main extends Application implements StartHandler, GameWinHandler, G
 
         sceneMain = new Scene(mainUI, 400, 300);
 
-        stage.setTitle("Memory Game");
+        stage.setTitle("Memory game");
         stage.setScene(sceneMain);
         stage.show();
     }
@@ -39,8 +38,8 @@ public class Main extends Application implements StartHandler, GameWinHandler, G
 
 
     @Override
-    public void onStart(int totalRow, int totalColumn) {
-        GameUI gameUI = new GameUI(totalRow, totalColumn);
+    public void onStart(int totalRow, int totalColumn, int timeCount) {
+        GameUI gameUI = new GameUI(totalRow, totalColumn, timeCount);
         gameUI.setOnWinGame(this);
         gameUI.setOnLoseGame(this);
 

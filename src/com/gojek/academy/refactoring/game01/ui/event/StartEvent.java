@@ -8,15 +8,17 @@ public class StartEvent extends Event {
 
     private int totalRow;
     private int totalColumn;
+    private int timeCount;
 
-    public StartEvent(int totalRow, int totalColumn){
+    public StartEvent(int totalRow, int totalColumn, int timeCount){
         super(START_TYPE);
 
         this.totalRow = totalRow;
         this.totalColumn = totalColumn;
+        this.timeCount = timeCount;
     }
 
     public void invoke(StartHandler handler){
-        handler.onStart(totalRow, totalColumn);
+        handler.onStart(totalRow, totalColumn, timeCount);
     }
 }
