@@ -35,6 +35,8 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
     private Label lblTotalCard;
     private Label lblTimer;
 
+    private Timer timer;
+
 
     public GameUI(int totalRow, int totalColumn, int timeCount0){
         this.timeCount = timeCount0;
@@ -97,7 +99,7 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
         lblTimer.setText("Time count: " + timeCount);
         lblTimer.setPadding(new Insets(15, 12, 0, 12));
 
-        Timer timer = new Timer(true);
+        timer = new Timer(true);
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -173,6 +175,7 @@ public class GameUI extends BorderPane implements EventHandler<ActionEvent> {
                 lblTotalCard.setText("Open '"+totalCard+"' number more");
 
                 if (totalCard <= 0){
+                    timer.cancel();
                     fireEvent(new GameEvent(GameEvent.GAME_WIN_TYPE));
                 }
 
